@@ -5,8 +5,8 @@ metadata:
   name: mysql-backup
   namespace: db
 spec:
-  # schedule: "0 0 * * *"
-  schedule: "* * * * *"
+  schedule: "0 0 * * *"
+  # schedule: "* * * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
