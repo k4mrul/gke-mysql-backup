@@ -1,0 +1,40 @@
+#####Sample
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-backup
+  namespace: db
+spec:
+  # schedule: "0 0 * * *"
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: gcp-bucket-sa
+            secret:
+              secretName: gcs-key
+          containers:
+          - name: mysql-backup
+            image: k4mrul/gke-mysql-backup
+            volumeMounts:
+            - name: gcp-bucket-sa
+              mountPath: /var/secrets/google
+            env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/gcp_service_account.json
+            - name:  MYSQL_HOST
+              value: mysql.db.svc.cluster.local
+            - name:  MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: mysql-root-password
+            - name:  BUCKET_NAME
+              value: appsero-db-backup
+            - name:  FOLDER_NAME
+              value: mysql-staging
+          restartPolicy: OnFailure
