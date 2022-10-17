@@ -19,7 +19,7 @@ spec:
               secretName: gcs-key
           containers:
           - name: mysql-backup
-            image: k4mrul/gke-mysql-backup
+            image: k4mrul/gke-mysql-backup-v1
             volumeMounts:
             - name: gcp-bucket-sa
               mountPath: /var/secrets/google
